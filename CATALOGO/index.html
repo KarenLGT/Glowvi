@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowVi - Bomboneras Capilares</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="icon" href="img/logo.png" type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div id="flores-container"></div>
+
+  <!-- Botón flotante de WhatsApp -->
+  <a href="https://wa.me/573144059343" class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- Botón de modo oscuro -->
+  <button class="toggle-theme" id="toggleTheme">🌙 Modo Oscuro</button>
+
+  <!-- Contador del carrito -->
+  <div class="cart-counter" id="cartCounter">
+    🛒 <span id="cartCount">0</span>
+  </div>
+
+  <header>
+    <div class="container">
+      <img src="img/logo.png" alt="GlowVi" class="logo" />
+      <div class="floral-decoration">✿ ✽ ❀ ✾</div>
+      <h1>Glow Vi</h1>
+      <div class="floral-decoration">✿ ✽ ❀ ✾</div>
+      <p class="slogan">Belleza natural para tu cabello</p>
+    </div>
+  </header>
+
+  <div id="filter-buttons" class="filter-container">
+    <button data-category="all" class="filter-btn active">✨ Todos</button>
+    <button data-category="hidratacion" class="filter-btn">💧 Hidratación</button>
+    <button data-category="reparacion" class="filter-btn">💆‍♀️ Reparación</button>
+    <button data-category="crecimiento" class="filter-btn">🌱 Crecimiento</button>
+  </div>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Buscar producto o ingrediente...">
+  </div>
+
+  <div class="container">
+    <div class="catalog">
+      <!-- Producto 1: Leche Capilar -->
+      <div class="product-card" data-product="1" data-category="hidratacion">
+        <div class="ribbon">Nuevo</div>
+        <div class="product-image" style="background-image: url('img/leche_pal_pelo.jpg');">
+          <div class="product-overlay">
+            <button class="quick-view" data-product="1">Vista Rápida</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Leche Capilar</h3>
+          <p class="product-description">Hidratación intensa para cabellos secos y maltratados. Restaura el brillo y suavidad.</p>
+          <div class="product-price">$50.000</div>
+          <button class="add-to-cart" data-product="1" data-name="Leche Capilar" data-price="$50.000">Añadir al carrito</button>
+        </div>
+      </div>
+
+      <!-- Producto 2: Bomba Capilar -->
+      <div class="product-card" data-product="2" data-category="reparacion">
+        <div class="ribbon">Nuevo</div>
+        <div class="product-image" style="background-image: url('img/bomba1.jpg');">
+          <div class="product-overlay">
+            <button class="quick-view" data-product="2">Vista Rápida</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Bomba Capilar</h3>
+          <p class="product-description">Nutrición profunda para cabellos quebradizos. Fortalece y protege contra daños.</p>
+          <div class="product-price">$50.000</div>
+          <button class="add-to-cart" data-product="2" data-name="Bomba Capilar" data-price="$50.000">Añadir al carrito</button>
+        </div>
+      </div>
+
+      <!-- Producto 3: Tratamiento de Cebolla -->
+      <div class="product-card" data-product="3" data-category="crecimiento">
+        <div class="ribbon">Más vendido</div>
+        <div class="product-image" style="background-image: url('img/cebolla.jpg');">
+          <div class="product-overlay">
+            <button class="quick-view" data-product="3">Vista Rápida</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Tratamiento de Cebolla</h3>
+          <p class="product-description">Estimula el crecimiento capilar y reduce la caída del cabello. Resultados visibles en semanas.</p>
+          <div class="product-price">$50.000</div>
+          <button class="add-to-cart" data-product="3" data-name="Tratamiento de Cebolla" data-price="$50.000">Añadir al carrito</button>
+        </div>
+      </div>
+
+      <!-- Producto 4: Mantequilla de Coco -->
+      <div class="product-card" data-product="4" data-category="reparacion">
+        <div class="ribbon">Nuevo</div>
+        <div class="product-image" style="background-image: url('img/coco1.jpg');">
+          <div class="product-overlay">
+            <button class="quick-view" data-product="4">Vista Rápida</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Mantequilla de Coco</h3>
+          <p class="product-description">Reparación profunda para cabellos extremadamente secos. Sellado de cutículas y brillo intenso.</p>
+          <div class="product-price">$50.000</div>
+          <button class="add-to-cart" data-product="4" data-name="Mantequilla de Coco" data-price="$50.000">Añadir al carrito</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonios -->
+    <div class="testimonials" id="testimonialsSection">
+      <div class="testimonial active">"¡Los productos de GlowVi cambiaron mi cabello para siempre! 💖"</div>
+      <div class="testimonial">"La leche capilar es mi favorita, la recomiendo al 100% 🌸"</div>
+      <div class="testimonial">"Increíble atención y calidad. ¡Volveré a comprar sin duda! 🌟"</div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalProductName"></h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-image" id="modalProductImage"></div>
+        <div class="modal-info">
+          <h3 class="modal-product-name" id="modalProductNameText"></h3>
+          <div class="modal-product-price" id="modalProductPrice"></div>
+          <p class="modal-product-description" id="modalProductDescription"></p>
+          <div class="modal-actions">
+            <div class="quantity-selector">
+              <button class="quantity-btn minus">-</button>
+              <input type="text" class="quantity-input" value="1" readonly />
+              <button class="quantity-btn plus">+</button>
+            </div>
+            <button class="add-to-cart" id="modalAddToCart">Comprar por WhatsApp</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">Producto añadido al carrito 🛍️</div>
+
+  <footer class="footer">
+    <div class="container">
+      <img src="img/logo.png" alt="GlowVi" class="logo" style="max-width: 120px; margin-bottom: 15px;">
+      <h3>Glow Vi</h3>
+      <p>Belleza natural para tu cabello</p>
+      <div class="social-icons">
+        <a href="https://www.facebook.com/GlowviCol/" class="social-icon" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/glowvi_col?igsh=MTVkZWdkaGpqeWZ1bQ==" class="social-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/573144059343" class="social-icon" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      </div>
+      <p>© 2025 Glow Vi. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

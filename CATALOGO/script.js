@@ -5,7 +5,7 @@ const products = [
     name: "Leche Capilar",
     price: "$50.000",
     description: "Nuestra Leche Capilar es un tratamiento intensivo de hidratación formulado especialmente para cabellos secos, maltratados y con frizz.",
-    image: "imagenes/leche_pal_pelo.jpg",
+    image: "img/leche_pal_pelo.jpg",
     category: "hidratacion"
   },
   {
@@ -13,7 +13,7 @@ const products = [
     name: "Bomba Capilar",
     price: "$50.000",
     description: "La Bomba Capilar Glow Vi es un cóctel nutritivo que fortalece el cabello desde la raíz hasta las puntas. Ideal para cabellos quebradizos y con tendencia a la caída.",
-    image: "imagenes/bomba1.jpg",
+    image: "img/bomba1.jpg",
     category: "reparacion"
   },
   {
@@ -21,7 +21,7 @@ const products = [
     name: "Tratamiento de Cebolla",
     price: "$50.000",
     description: "Nuestro exclusivo Tratamiento de Cebolla está científicamente formulado para estimular el folículo piloso y promover el crecimiento saludable del cabello.",
-    image: "imagenes/cebolla.jpg",
+    image: "img/cebolla.jpg",
     category: "crecimiento"
   },
   {
@@ -29,7 +29,7 @@ const products = [
     name: "Mantequilla de Coco",
     price: "$50.000",
     description: "La Mantequilla de Coco Glow Vi es un tratamiento reconstructivo para cabellos extremadamente secos, teñidos o con químicos. Su fórmula rica en ácidos grasos nutre profundamente.",
-    image: "imagenes/coco1.jpg",
+    image: "img/coco1.jpg",
     category: "reparacion"
   }
 ];
@@ -40,6 +40,33 @@ const closeModal = document.querySelector('.close-modal');
 const quickViewButtons = document.querySelectorAll('.quick-view');
 const addToCartButtons = document.querySelectorAll('.add-to-cart');
 
+// Función para detectar si es móvil
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Función para abrir WhatsApp
+function openWhatsApp(productName, productPrice, quantity = 1) {
+  const phoneNumber = "573144059343";
+  const rawMessage = `🌸 ¡Hola Glowvi! 💖\nQuisiera comprar:\n\n*${quantity} x ${productName}*\n💵 Precio: *${productPrice}*\n✨ ¿Podrías darme más información? 🙏🏼💕`;
+  const encodedMessage = encodeURIComponent(rawMessage);
+  
+  // Usamos api.whatsapp.com para móviles y web.whatsapp.com para desktop
+  const whatsappUrl = isMobileDevice() 
+    ? `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`
+    : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+  
+  window.open(whatsappUrl, '_blank');
+}
+
+// Configurar botón flotante de WhatsApp
+const whatsappFloat = document.querySelector('.whatsapp-float');
+if (whatsappFloat) {
+  whatsappFloat.href = isMobileDevice()
+    ? "https://api.whatsapp.com/send?phone=573144059343&text=Hola%20GlowVi,%20quisiera%20más%20información"
+    : "https://web.whatsapp.com/send?phone=573144059343&text=Hola%20GlowVi,%20quisiera%20más%20información";
+}
+
 // Abrir modal al hacer clic en Vista Rápida
 quickViewButtons.forEach(button => {
     button.addEventListener('click', function() {
@@ -48,18 +75,23 @@ quickViewButtons.forEach(button => {
     });
 });
 
-// Abrir modal al hacer clic en Añadir al carrito
+// Configurar botones "Añadir al carrito"
 addToCartButtons.forEach(button => {
-  button.addEventListener('click', function () {
+  button.addEventListener('click', function() {
+    // Actualizar contador del carrito
+    cartCount++;
+    cartCountSpan.textContent = cartCount;
+    showToast("Producto añadido al carrito 🛍️");
+    
+    // Lanzar confeti
+    lanzarConfeti();
+    
+    // Obtener datos del producto
     const productName = this.getAttribute('data-name');
     const productPrice = this.getAttribute('data-price');
-
-    const rawMessage = `🌸 ¡Hola Glowvi! 💖\nQuisiera comprar el producto: *${productName}* 🛍️\n💵 Precio: *${productPrice}*\n✨ ¿Podrías darme más información, por fa? 🙏🏼💕`;
-    const encodedMessage = encodeURIComponent(rawMessage);
-    const phone = "573144059343";
-
-    const url = `https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
-    window.open(url, '_blank');
+    
+    // Abrir WhatsApp
+    openWhatsApp(productName, productPrice);
   });
 });
 
@@ -109,18 +141,22 @@ plusBtn.addEventListener('click', function() {
     quantityInput.value = value + 1;
 });
 
-// Añadir al carrito desde el modal (redirige a WhatsApp)
+// Añadir al carrito desde el modal
 document.getElementById('modalAddToCart').addEventListener('click', function() {
     const productId = this.getAttribute('data-product');
     const product = products.find(p => p.id == productId);
     const quantity = parseInt(quantityInput.value);
     
-    // Crear mensaje para WhatsApp
-    const message = `¡Hola Glow Vi! Estoy interesad@ en comprar:\n\n*${quantity} x ${product.name} - ${product.price}*\n\nPor favor, necesito más información sobre este producto.`;
-    const encodedMessage = encodeURIComponent(message);
+    // Actualizar contador del carrito
+    cartCount++;
+    cartCountSpan.textContent = cartCount;
+    showToast("Producto añadido al carrito 🛍️");
     
-    // Redirigir a WhatsApp
-    window.open(`https://wa.me/573144059343?text=${encodedMessage}`, '_blank');
+    // Lanzar confeti
+    lanzarConfeti();
+    
+    // Abrir WhatsApp
+    openWhatsApp(product.name, product.price, quantity);
     
     // Cerrar el modal
     modal.style.display = 'none';
@@ -144,31 +180,14 @@ function crearFlores() {
     }
 }
 
-// Crear partículas para el fondo escarchado
-function crearParticulas() {
-    const container = document.getElementById('particles-container');
-    const count = 100;
-    
-    for (let i = 0; i < count; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Posición aleatoria
-        particle.style.left = `${Math.random() * 100}vw`;
-        particle.style.top = `${Math.random() * 100}vh`;
-        
-        // Tamaño aleatorio
-        const size = Math.random() * 4 + 1;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        // Opacidad y animación
-        particle.style.opacity = Math.random() * 0.7 + 0.3;
-        particle.style.animationDuration = `${Math.random() * 15 + 5}s`;
-        particle.style.animationDelay = `${Math.random() * 5}s`;
-        
-        container.appendChild(particle);
-    }
+// Función para lanzar confeti
+function lanzarConfeti() {
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ff69b4', '#ffd1dc', '#e75480', '#ffffff']
+    });
 }
 
 // Búsqueda de productos
@@ -193,7 +212,6 @@ const filterButtons = document.querySelectorAll('.filter-btn');
 
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
-    // Actualizar botones activos
     filterButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
@@ -212,11 +230,6 @@ filterButtons.forEach(btn => {
   });
 });
 
-// Llamar a las funciones cuando se cargue la página
-window.addEventListener('load', () => {
-  crearFlores();
-  crearParticulas();
-});
 // 🌙 Modo oscuro con persistencia
 const toggleThemeBtn = document.getElementById('toggleTheme');
 toggleThemeBtn.addEventListener('click', () => {
@@ -224,31 +237,9 @@ toggleThemeBtn.addEventListener('click', () => {
   localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
 });
 
-window.addEventListener('load', () => {
-  if (localStorage.getItem('theme') === 'dark') {
-    document.body.classList.add('dark-mode');
-  }
-});
-
 // 🛒 Carrito con contador visual
 let cartCount = 0;
 const cartCountSpan = document.getElementById('cartCount');
-
-// Contador desde botones "Añadir al carrito"
-document.querySelectorAll('.add-to-cart').forEach(button => {
-  button.addEventListener('click', () => {
-    cartCount++;
-    cartCountSpan.textContent = cartCount;
-    showToast("Producto añadido al carrito 🛍️");
-  });
-});
-
-// Contador desde botón del modal
-document.getElementById('modalAddToCart').addEventListener('click', () => {
-  cartCount++;
-  cartCountSpan.textContent = cartCount;
-  showToast("Producto añadido al carrito 🛍️");
-});
 
 // 🔔 Notificación tipo toast
 function showToast(message) {
@@ -267,18 +258,22 @@ setInterval(() => {
   currentTestimonial = (currentTestimonial + 1) % testimonials.length;
   testimonials[currentTestimonial].classList.add('active');
 }, 4000);
-function lanzarConfeti() {
-    confetti({
-        particleCount: 150,       // Cantidad de partículas
-        spread: 70,               // Ángulo de dispersión
-        origin: { y: 0.6 },       // Posición Y de origen (0 = arriba, 1 = abajo)
-        colors: ['#ff69b4', '#ffd1dc', '#e75480', '#ffffff'] // Colores rosas/blancos
-    });
-}
-// Ejemplo en tus event listeners de compra:
-document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', () => {
-        lanzarConfeti(); // ¡Confeti al añadir al carrito!
-        // ... resto de tu código
-    });
+
+// Inicialización cuando se carga la página
+window.addEventListener('load', () => {
+  // Verificar modo oscuro
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+  }
+  
+  // Crear elementos decorativos
+  crearFlores();
+  
+  // Configurar botones de WhatsApp
+  const whatsappLinks = document.querySelectorAll('[href*="whatsapp.com"]');
+  whatsappLinks.forEach(link => {
+    if (isMobileDevice()) {
+      link.href = link.href.replace('web.whatsapp.com', 'api.whatsapp.com');
+    }
+  });
 });
